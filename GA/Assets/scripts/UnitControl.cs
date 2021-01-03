@@ -7,7 +7,7 @@ using System;
 public class UnitControl : MonoBehaviour {
   public GameObject unit;
   public GameObject plane;
-  public GameObject humanoid;
+  private GameObject humanoid;
   public Vector3 bodyRotation = new Vector3(0,0,0);
   public int points;
   RigBone rightLowerLeg;
