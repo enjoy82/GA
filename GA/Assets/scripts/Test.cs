@@ -203,4 +203,20 @@ public class Test : MonoBehaviour
             }
         }
     }
+    void OnGUI() {
+		string str = "";
+		str += string.Format("Generation: {0}\n", this.count);
+		str += string.Format("Frame: {0}\n", this.frame);
+		str += string.Format("\n";
+		str += string.Format("Best score\n");
+		/*
+        for(int i=0; i<10; ++i ) {
+			str += string.Format("  {0:D2}: {1:F2}\n", bestScoreIds[i], bestScores[i]);
+		}
+        */
+
+		GUIStyle style = new GUIStyle();
+		style.normal.textColor = Color.black;
+		GUI.Label(new Rect(10, 10, 100, 40), str, style);
+	}
 }
