@@ -9,6 +9,8 @@ public class Test : MonoBehaviour
     const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000;
     //関節可動域 [left&right upleg_front-back, upleg_in-out, upleg_twist_in-out, low_leg_stretch]
     int[] Range_list = new int[8]{60, 60, 60, 60, 60, 60, 60, 60};
+    //結果格納部分
+    int[] result = new int[object_num];
     //現在の世代数
     public int count;
     //経過したフレーム数
@@ -30,23 +32,38 @@ public class Test : MonoBehaviour
 
     // Update is called once per frame(30fps, 1frame/0.033s)
     //TODO フレームごとに関節角度の動作
-    //TODO フレームごとに落下判定(やんなくていい)
+    //TODO フレームごとに落下判定
     void Update()
     {
         if(frame == time){
             evaluate();
             //ワンチャン遅延させなきゃダメかも
         }
-        movement();
+        for(int i = 0; i < object_num; i++){
+            //落下判定、引数は自由に定義していい
+            if(check()){
+                result[i] = frame;
+            }
+        }
+        for(int i = 0; i < object_num; i++){
+            //関節動作、引数は自由に定義していい
+            movement();
+        }
+        
         frame++;
     }
-    //TODO関節角度の動作(やんなくていい)
+    //TODO関節角度の動作
     void movement(){
         for(int i = 0; i < object_num; i++){
             for(int l = 0; l < Range_list.Length; l++){
                 
             }
         }
+    }
+
+    bool check(){
+        //if 落下
+        return true;
     }
 
     //TODOどう評価するか
@@ -80,10 +97,17 @@ public class Test : MonoBehaviour
 
     }
 
-    //初期設定
-    void initiarize(){
+    void next_gen(){
+        for(int i = 0; i < object_num; i++){
+            result[i] = -1;
+        }
         boxiy = new UnityEngine.GameObject[object_num];
         createobjects();
+    }
+
+    //初期設定
+    void initiarize(){
+        next_gen();
 
         //配列初期生成
         GA_list = new int[object_num, time, Range_list.Length];
