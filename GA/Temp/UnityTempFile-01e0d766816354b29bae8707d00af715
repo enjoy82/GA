@@ -299,5 +299,6 @@
 "Assets/SAColliderBuilder/Scripts/SABoneColliderChild.cs"
 "Assets/SAColliderBuilder/Scripts/SAMeshCollider.cs"
 "Assets/SAColliderBuilder/Scripts/SAMeshColliderBuilder.cs"
+"Assets/scripts/RigBone.cs"
 "Assets/scripts/Test.cs"
-"Assets/scripts/Test_kansetu.cs"
+"Assets/scripts/UnitControl.cs"

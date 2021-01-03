@@ -66,7 +66,7 @@ public class Test : MonoBehaviour
     void movement(){
         for(int i = 0; i < object_num; i++){
             for(int l = 0; l < Range_list.Length; l++){
-                
+            
             }
         }
     }
@@ -207,7 +207,7 @@ public class Test : MonoBehaviour
 		string str = "";
 		str += string.Format("Generation: {0}\n", this.count);
 		str += string.Format("Frame: {0}\n", this.frame);
-		str += string.Format("\n";
+		str += string.Format("\n");
 		str += string.Format("Best score\n");
 		/*
         for(int i=0; i<10; ++i ) {
