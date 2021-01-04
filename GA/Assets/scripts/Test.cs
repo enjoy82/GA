@@ -18,6 +18,7 @@ public class Test : MonoBehaviour
     public int frame;
     //子を格納する配列
     UnityEngine.GameObject[] boxiy;
+    UnitControl[] humanoids;
     //オブジェクト読み込み用変数
     private UnityEngine.GameObject Objct;
     //GA配列部分 第一変数->オブジェクトの番号 第二変数->時間 第三変数->対応する関節角度
@@ -27,7 +28,7 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     void Start () {
         // unit1をGameObject型で取得
-        Objct = (GameObject)Resources.Load ("unit1");
+        Objct = Resources.Load ("unit1") as GameObject;
         count = 1;
         frame = 0;
         initiarize();
@@ -173,10 +174,12 @@ public class Test : MonoBehaviour
     //オブジェクト生成
     void createobjects(){
         boxiy = new UnityEngine.GameObject[object_num];
+        humanoids = new UnitControl[object_num];
         for(int i = 0; i < object_num; i++){
             if(i % 2 == 0){
                 float pos = (float)8.0 * (i / 2);
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
+                humanoids[i] = new UnitControl(boxiy[i].transform.Find ("Robot Kyle").GetComponent<Animator>());
             }else{
                 float pos = (float)8.0 * ((i+1) / 2) * -1;
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);

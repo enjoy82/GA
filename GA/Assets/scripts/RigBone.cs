@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RigBone {
-  public GameObject gameObject;
-  public HumanBodyBones bone;
+  private GameObject gameObject;
+  private HumanBodyBones bone;
   public bool isValid;
   Animator animator;
   Quaternion savedValue;
@@ -12,7 +12,7 @@ public class RigBone {
     gameObject = g;
     bone = b;
     isValid = false;
-    animator = gameObject.GetComponent<Animator>();
+    animator = g.GetComponent<Animator>();
     if (animator == null) {
       Debug.Log("no Animator Component");
       return;

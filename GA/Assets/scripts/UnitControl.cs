@@ -4,21 +4,24 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class UnitControl : MonoBehaviour {
+public class UnitControl {
   public GameObject unit;
   public GameObject plane;
-  private GameObject humanoid;
+  public GameObject humanoid;
   public Vector3 bodyRotation = new Vector3(0,0,0);
   public int points;
   RigBone rightLowerLeg;
-  void set(GameObject input_plane){
-    plane = input_plane;
+  public UnitControl(GameObject input_humanoid){
+    rightLowerLeg = new RigBone(input_humanoid, HumanBodyBones.RightLowerLeg);
+
   }
   void Start () {
+    /*
     rightLowerLeg = new RigBone(humanoid, HumanBodyBones.RightLowerLeg);
     if(rightLowerLeg == null){
       Debug.Log("this is null");
     }
+    */
   }
   void Update () {
     double t = Math.Sin(Time.time * Math.PI); // [-1, 1]
@@ -36,6 +39,8 @@ public class UnitControl : MonoBehaviour {
     if (collision.gameObject.name == "Plane"){
       Debug.Log("Hit");
       //判定終了
+      //rb = unit.GetComponent<Rigidbody>();
+      //rb.isKinematic = true;
     }
   }
 }
