@@ -17,7 +17,8 @@ public class Test : MonoBehaviour
     //経過したフレーム数
     public int frame;
     //子を格納する配列
-    UnityEngine.GameObject[] boxiy;
+    protected GameObject[] boxiy;
+    protected UnitControl[] unitControl = new UnitControl[object_num];
     //オブジェクト読み込み用変数
     private UnityEngine.GameObject Objct;
     //GA配列部分 第一変数->オブジェクトの番号 第二変数->時間 第三変数->対応する関節角度
@@ -172,15 +173,28 @@ public class Test : MonoBehaviour
     }
     //オブジェクト生成
     void createobjects(){
-        boxiy = new UnityEngine.GameObject[object_num];
+        boxiy = new GameObject[object_num];
+        unitControl = new UnitControl[object_num];
         for(int i = 0; i < object_num; i++){
             if(i % 2 == 0){
                 float pos = (float)8.0 * (i / 2);
-                boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
-                //humanoids[i] = new UnitControl(boxiy[i].transform.Find("Robot Kyle").gameObject);
+                boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity) as GameObject;
+                //Debug.Log(boxiy[i].transform.GetChild(2).gameObject.GetComponent<UnitControl>());
+                unitControl[i] = boxiy[i].transform.GetChild(2).gameObject.GetComponent<UnitControl>();
+                //Debug.Log(GameObject.Find("Plane") as GameObject);
+                unitControl[i].plane = GameObject.Find("Plane");
+                //Debug.Log(boxiy[i].transform.GetChild(1).gameObject);
+                unitControl[i].cube = boxiy[i].transform.GetChild(1).gameObject;
+
+                //遺伝子の代入
+                //unitControl[i].gene = //
+                
             }else{
                 float pos = (float)8.0 * ((i+1) / 2) * -1;
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
+                unitControl[i] = boxiy[i].transform.GetChild(2).gameObject.GetComponent<UnitControl>();
+                unitControl[i].plane = GameObject.Find("Plane");
+                unitControl[i].cube = boxiy[i].transform.GetChild(1).gameObject;
             }
         }
     }
