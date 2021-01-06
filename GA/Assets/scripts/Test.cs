@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Text;
 
 public class Test : MonoBehaviour
 {
     const int elite = 8;
     //オブジェクトの個数(1世代当たりのこの数)、進化させる世代数、遺伝で使う時間(per frame), 突然変異の確率
-    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000, mutation = 1;
+    const int object_num = elite + ((elite * (elite-1)) / 2), generations = 10, time = 1000, mutation = 1;
     const float frame_ms = 0.02f;
     //関節可動域 [left&right upleg_front-back, upleg_in-out, upleg_twist_in-out, low_leg_stretch]
     int[] Range_list = new int[8]{60, 60, 60, 60, 60, 60, 60, 60};
@@ -96,6 +98,7 @@ public class Test : MonoBehaviour
         Debug.Log(count+ " 世代目");
         Debug.Log(result[0,0]+":最大エリート");
         //TODO　結果出力したい
+        textSave(result[0,0]);
         count++;
         if(count == generations+1){
             Debug.Log("フィニッシュ");
@@ -202,5 +205,12 @@ public class Test : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void textSave(int txt){
+        StreamWriter sw = new StreamWriter("./Log/log.csv",true); //true=追記 false=上書き
+        sw.WriteLine(txt);
+        sw.Flush();
+        sw.Close();
     }
 }
