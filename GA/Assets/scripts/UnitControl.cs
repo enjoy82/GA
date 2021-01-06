@@ -12,36 +12,47 @@ public class UnitControl : MonoBehaviour{
   public RigBone[] legs = new RigBone[6];
   //こいつをTestからコピーさせて、0-1で左右どちらかに重心をかけるようにしたい
   public bool[] gene = new bool[180];
-  public int points = 0;
+  public float points = 0;
   public int movement_indicator = 0;
   public bool isTraining = true;
-  int i;
 
   void Start () {
 
   }
   void Update () {
-    //板と足の角度の調整
-    //Debug.Log(cube.transform.localEulerAngles.z);
-    legs[2].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
-    legs[5].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
+    //動かす
     if(isTraining){
-      //動かす
+      //板と足の角度の調整
+      //Debug.Log(cube.transform.localEulerAngles.z);
+      legs[2].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
+      legs[5].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
+      //角度を出す
+      Debug.Log(humanoid.transform.localEulerAngles.y);
+      int angle = (int)(humanoid.transform.localEulerAngles.y) + 89;
+      if(angle <0){
+        angle = 0;
+      }else if(engle >179){
+        angle = 179;
+      }
       //位置が右だったら(geneで制御)
+      if(gene[angle]){
         //インジケータの増加
         if(movement_indicator<=30){
           movement_indicator++;
         }
-        //インジケータの減少
+      }else{
+         //インジケータの減少
         if(movement_indicator<=-30){
-          //movement_indicator--;
+          movement_indicator--;
         }
+      }
       //左に動かす
       if(movement_indicator > 0){
         legs[0].offset((float)movement_indicator,0,0,1);
         legs[1].offset((float)(-2*movement_indicator),0,0,1);
         legs[2].offset((float)(-movement_indicator),0,0,1);
       }else if(movement_indicator == 0){
+        //戻す
         legs[0].offset((float)movement_indicator,0,0,1);
         legs[1].offset((float)(-2*movement_indicator),0,0,1);
         legs[2].offset((float)(-movement_indicator),0,0,1);
@@ -55,6 +66,7 @@ public class UnitControl : MonoBehaviour{
         legs[5].offset((float)(-movement_indicator),0,0,1);
       }
       //評価
+      points += 90 - Mathf.Abs(humanoid.transform.localEulerAngles.y); 
     }
 
   }

@@ -8,8 +8,6 @@ public class Test : MonoBehaviour
     //オブジェクトの個数(1世代当たりのこの数)、進化させる世代数、遺伝で使う時間(per frame), 突然変異の確率
     const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000, mutation = 1;
     const float frame_ms = 0.02f;
-    //関節可動域 [left&right upleg_front-back, upleg_in-out, upleg_twist_in-out, low_leg_stretch]
-    int[] Range_list = new int[8]{60, 60, 60, 60, 60, 60, 60, 60};
     //結果格納部分
     int[, ] result = new int[object_num, 2];
     //現在の世代数
@@ -21,10 +19,10 @@ public class Test : MonoBehaviour
     protected UnitControl[] unitControl = new UnitControl[object_num];
     //オブジェクト読み込み用変数
     private UnityEngine.GameObject Objct;
-    //GA配列部分 第一変数->オブジェクトの番号 第二変数->時間 第三変数->対応する関節角度
-    int[][ , ] GA_list;
+    //GA配列部分 humanoidの角度(配列番号0->-90度、配列番号9s0->0度、配列番号179->90度)
+    bool[] GA_list;
     //コピー用配列
-    int[][ , ] next_GA_list;
+    bool[] next_GA_list;
     // Start is called before the first frame update
     void Start () {
         // unit1をGameObject型で取得
@@ -35,46 +33,16 @@ public class Test : MonoBehaviour
     }
 
     // Update is called once per frame(30fps, 1frame/0.033s)
-    //TODO フレームごとに関節角度の動作
-    //TODO フレームごとに落下判定
-    //updateが呼ばれなかったので、こうした
-    void execute(){
+    //updateが呼ばれなかったので、こうした →これでもダメ？
+    void Update(){
         //Debug.Log(frame+ ":フレーム数");
-        bool f = true;
         if(frame == time){
             frame = 0;
-            f = false;
             evaluate();
             return;
             //ワンチャン遅延させなきゃダメかも
         }
-        for(int i = 0; i < object_num; i++){
-            //落下判定、引数は自由に定義していい
-            if(check()){
-                result[i,0] = frame;
-            }
-        }
-        for(int i = 0; i < object_num; i++){
-            //関節動作、引数は自由に定義していい
-            movement();
-        }
         frame++;
-        if(f){
-            Invoke("execute", frame_ms);
-        }
-    }
-    //TODO関節角度の動作
-    void movement(){
-        for(int i = 0; i < object_num; i++){
-            for(int l = 0; l < Range_list.Length; l++){
-            
-            }
-        }
-    }
-
-    bool check(){
-        //if 落下
-        return false;
     }
 
     //TODOどう評価するか
@@ -107,7 +75,7 @@ public class Test : MonoBehaviour
     //交叉、突然変異、次世代の生成
     void make_next_unit(){
         //次世代生成の準備
-        next_GA_list = new int[object_num][,];
+        next_GA_list = new bool[180];
         for(int i = 0; i < elite; i++){
             int k = result[i,1];
             next_GA_list[i] = GA_list[k];
