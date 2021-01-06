@@ -27,11 +27,15 @@ public class UnitControl : MonoBehaviour{
       legs[2].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
       legs[5].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
       //角度を出す
-      Debug.Log(humanoid.transform.localEulerAngles.y);
+      //Debug.Log(humanoid.transform.localEulerAngles.y);
       int angle = (int)(humanoid.transform.localEulerAngles.y) + 89;
+      if(humanoid.transform.localEulerAngles.y > 180){
+        angle = (int)(humanoid.transform.localEulerAngles.y) -360 + 89;
+      }
+      Debug.Log(angle);
       if(angle <0){
         angle = 0;
-      }else if(engle >179){
+      }else if(angle >179){
         angle = 179;
       }
       //位置が右だったら(geneで制御)
@@ -65,15 +69,14 @@ public class UnitControl : MonoBehaviour{
         legs[4].offset((float)(-2*movement_indicator),0,0,1);
         legs[5].offset((float)(-movement_indicator),0,0,1);
       }
-      //評価
-      points += 90 - Mathf.Abs(humanoid.transform.localEulerAngles.y); 
+      //評価(time bonus + angle point)
+      points += 20 + (90 - Mathf.Abs(humanoid.transform.localEulerAngles.y));
     }
 
   }
   void set_plane(GameObject input_plane){
     plane = input_plane;
   }
-  /*
   void OnCollisionEnter(Collision collision){
     if (collision.gameObject == plane){
       Debug.Log("Hit");
@@ -81,13 +84,12 @@ public class UnitControl : MonoBehaviour{
       Rigidbody rb = cube.GetComponent<Rigidbody>();
       rb.isKinematic = true;
       rb = humanoid.GetComponent<Rigidbody>();
-      //rb.isKinematic = true;
+      rb.isKinematic = true;
       rb = capsule.GetComponent<Rigidbody>();
-      //rb.isKinematic = true;
-      //isTraining = false;
+      rb.isKinematic = true;
+      isTraining = false;
     }
   }
-  */
 }
 
 

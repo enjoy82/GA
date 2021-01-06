@@ -1,34 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 
 public class Test : MonoBehaviour
 {
     const int elite = 8;
     //オブジェクトの個数(1世代当たりのこの数)、進化させる世代数、遺伝で使う時間(per frame), 突然変異の確率
-    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000, mutation = 1;
+    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000, mutation = 10;
     const float frame_ms = 0.02f;
-    //結果格納部分
-    int[, ] result = new int[object_num, 2];
+    //結果格納部分(point,index)
+    int[,] result = new int[object_num,2];
     //現在の世代数
     public int count;
     //経過したフレーム数
     public int frame;
+    //遺伝子の長さ
+    public int gene_length = 180;
     //子を格納する配列
     protected GameObject[] boxiy;
     protected UnitControl[] unitControl = new UnitControl[object_num];
     //オブジェクト読み込み用変数
     private UnityEngine.GameObject Objct;
-    //GA配列部分 humanoidの角度(配列番号0->-90度、配列番号9s0->0度、配列番号179->90度)
-    bool[] GA_list;
+    //GA配列部分 humanoidの角度(配列番号0->-90度、配列番号89->0度、配列番号179->90度)
+    bool[][] GA_list;
     //コピー用配列
-    bool[] next_GA_list;
+    bool[][] next_GA_list;
     // Start is called before the first frame update
     void Start () {
         // unit1をGameObject型で取得
         Objct = Resources.Load ("unit1") as GameObject;
         count = 1;
         frame = 0;
+        //初期gene生成
+        GA_list = new bool[object_num][];
+        next_GA_list = new bool[object_num][];
+        for(int i = 0; i < object_num; i++){
+            bool[] list = new bool[gene_length];
+            for(int j = 0;j<gene_length;j++){
+                list[j] = (UnityEngine.Random.value > 0.5f);
+            }
+            GA_list[i] = list;
+        }
         initiarize();
     }
 
@@ -45,18 +59,53 @@ public class Test : MonoBehaviour
         frame++;
     }
 
-    //TODOどう評価するか
-    void evaluate(){
-        delete_objct();
-        make_next_generation();
-        next_gen();
-        execute();
+    //初期設定
+    void initiarize(){
+        //結果の初期化
+        for(int i = 0; i < object_num; i++){
+            result[i,0] = 0;
+            result[i,1] = i;
+        }
+        createobjects();
     }
 
-    void delete_objct(){
+    //オブジェクト生成
+    void createobjects(){
+        boxiy = new GameObject[object_num];
+        unitControl = new UnitControl[object_num];
+        for(int i = 0; i < object_num; i++){
+            if(i % 2 == 0){
+                float pos = (float)8.0 * (i / 2);
+                boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity) as GameObject;
+                //Debug.Log(boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>());
+                unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
+                //Debug.Log(GameObject.Find("Plane") as GameObject);
+                unitControl[i].plane = GameObject.Find("Plane");
+                //Debug.Log(boxiy[i].transform.GetChild(2).gameObject);
+                unitControl[i].cube = boxiy[i].transform.GetChild(2).gameObject;
+                //遺伝子の代入
+                unitControl[i].gene = GA_list[i];
+
+            }else{
+                float pos = (float)8.0 * ((i+1) / 2) * -1;
+                boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
+                unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
+                unitControl[i].plane = GameObject.Find("Plane");
+                unitControl[i].cube = boxiy[i].transform.GetChild(2).gameObject;
+                //遺伝子の代入
+                unitControl[i].gene = GA_list[i];
+            }
+        }
+    }
+
+    void evaluate(){
+        make_next_generation();
+
+        //オブジェクト削除
         for(int i = 0; i < object_num; i++){
             Destroy(boxiy[i]);
         }
+        initiarize();
     }
 
     void make_next_generation(){
@@ -72,102 +121,17 @@ public class Test : MonoBehaviour
         }
     }
 
-    //交叉、突然変異、次世代の生成
-    void make_next_unit(){
-        //次世代生成の準備
-        next_GA_list = new bool[180];
-        for(int i = 0; i < elite; i++){
-            int k = result[i,1];
-            next_GA_list[i] = GA_list[k];
-        }
-        for(int i = elite; i < object_num; i++){
-            next_GA_list[i] = new int[time, Range_list.Length];
-        }
-
-        int g = 0;
-        //二点交叉(多分意味ない)ので確率で交叉、突然変異
-        for(int i = 0; i < elite-1; i++){
-            for(int l = i+1; l < elite; l++){
-                for(int k = 0; k < time; k++){
-                    int c = Random.Range(0, 10);
-                    if(c < mutation){
-                        for(int m = 0; m < Range_list.Length; m++){
-                            //TODO 関節の挙動
-                            next_GA_list[elite+g][k,m] = Random.Range(-1 * Range_list[m], Range_list[m]);
-                        }
-                    }else if(c >= mutation && (c-mutation) <= (c-mutation)/2){
-                        for(int m = 0; m < Range_list.Length; m++){
-                            next_GA_list[elite+g][k,m] = GA_list[i][k, m];
-                        }
-                    }else{
-                        for(int m = 0; m < Range_list.Length; m++){
-                            next_GA_list[elite+g][k,m] = GA_list[l][k, m];
-                        }
-                    }
-                }
-                g++;
-            }
-        }
-        GA_list = next_GA_list;
-    }
-
-    void next_gen(){
-        for(int i = 0; i < object_num; i++){
-            result[i,0] = i * 1000;
-            result[i,1] = i;
-        }
-        createobjects();
-    }
-
-    //初期設定
-    void initiarize(){
-        next_gen();
-
-        //配列初期生成
-        GA_list = new int[object_num][,];
-        for(int i = 0; i < object_num; i++){
-            GA_list[i] = new int[time, Range_list.Length];
-        }
-        for(int i = 0; i < object_num; i++){
-            for(int l = 0; l < time; l++){
-                for(int k = 0; k < Range_list.Length; k++){
-                    //TODO 関節の挙動
-                    GA_list[i][l,k] = Random.Range(-1 * Range_list[k], Range_list[k]);
-                }
-            }
-        }
-
-        execute();
-    }
-    //オブジェクト生成
-    void createobjects(){
-        boxiy = new GameObject[object_num];
-        unitControl = new UnitControl[object_num];
-        for(int i = 0; i < object_num; i++){
-            if(i % 2 == 0){
-                float pos = (float)8.0 * (i / 2);
-                boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity) as GameObject;
-                //Debug.Log(boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>());
-                unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
-                //Debug.Log(GameObject.Find("Plane") as GameObject);
-                unitControl[i].plane = GameObject.Find("Plane");
-                //Debug.Log(boxiy[i].transform.GetChild(2).gameObject);
-                unitControl[i].cube = boxiy[i].transform.GetChild(2).gameObject;
-
-                //遺伝子の代入
-                //unitControl[i].gene = //
-                
-            }else{
-                float pos = (float)8.0 * ((i+1) / 2) * -1;
-                boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
-                unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
-                unitControl[i].plane = GameObject.Find("Plane");
-                unitControl[i].cube = boxiy[i].transform.GetChild(2).gameObject;
-            }
-        }
-    }
-
     void sort_by_evaluation(){
+        //pointの加算とresultへのコピー
+        for(int i = 0; i< object_num;i++){
+            float point = unitControl[i].points;
+            if(unitControl[i].isTraining){
+                //生存ボーナス
+                point += 10000;
+            }
+            result[i,0] = (int)point;
+        }
+        //resultをソート
         //配列の回数分回すバブルソート
         for (int i = 0; i < object_num; i++)
         {
@@ -177,7 +141,8 @@ public class Test : MonoBehaviour
                 //比較元より大きければ入れ替え
                 if (result[i,0] < result[j,0])
                 {
-                    int x = result[j,0],y = result[j,1];
+                    int x = result[j,0];
+                    int y = result[j,1];
                     result[j,0] = result[i,0];
                     result[j,1] = result[i,1];
                     result[i,0] = x;
@@ -185,7 +150,51 @@ public class Test : MonoBehaviour
                 }
             }
         }
+
     }
+
+    int[] shuffle(int max,int length){
+        return Enumerable.Range(0, max).OrderBy(n => Guid.NewGuid()).Take(length).ToArray();
+    }
+
+    //交叉、突然変異、次世代の生成
+    void make_next_unit(){
+        //次世代生成の準備
+        next_GA_list = new bool[object_num][];
+        //エリートのコピー
+        for(int i = 0; i < elite; i++){
+            int k = result[i,1];
+            next_GA_list[i] = GA_list[k];
+        }
+        //子孫の生成
+        for(int i = elite; i < object_num; i++){
+            bool[] generate_gene = new bool[gene_length];
+            int[] selected_parent = shuffle(elite,2);
+            Debug.Log(string.Join(",",selected_parent));
+            bool[] parent1 = GA_list[selected_parent[0]];
+            bool[] parent2 = GA_list[selected_parent[1]];
+            int[] selected_gene = shuffle(gene_length,gene_length);
+            Debug.Log(string.Join(",",selected_gene));
+            Debug.Log(selected_gene[gene_length-1]);
+            for(int j = 0;j<(int)(gene_length/2);j++){
+                generate_gene[selected_gene[j]] = parent1[selected_gene[j]];
+            }
+            for(int j = (int)(gene_length/2);j<gene_length;j++){
+                generate_gene[selected_gene[j]] = parent2[selected_gene[j]];
+            }
+            next_GA_list[i] = generate_gene;
+        }
+        //突然変異10%
+        for(int i = 0; i<object_num; i++){
+            int[] selected_gene = shuffle(gene_length-1,(int)(gene_length * mutation/100) );
+            for(int j = 0; j < (int)(gene_length*mutation/100);j++){
+                next_GA_list[i][selected_gene[j]] = !(next_GA_list[i][selected_gene[j]]);
+            }
+        }
+
+        GA_list = next_GA_list;
+    }
+
     void OnGUI() {
 		string str = "";
 		str += string.Format("Generation: {0}\n", this.count);
