@@ -32,7 +32,7 @@ public class UnitControl : MonoBehaviour{
       if(humanoid.transform.localEulerAngles.y > 180){
         angle = (int)(humanoid.transform.localEulerAngles.y) -360 + 89;
       }
-      Debug.Log(angle);
+      //Debug.Log(angle);
       if(angle <0){
         angle = 0;
       }else if(angle >179){
@@ -78,7 +78,7 @@ public class UnitControl : MonoBehaviour{
     plane = input_plane;
   }
   void OnCollisionEnter(Collision collision){
-    if (collision.gameObject == plane){
+    if (isTraining && collision.gameObject == plane){
       Debug.Log("Hit");
       //判定終了
       Rigidbody rb = cube.GetComponent<Rigidbody>();
@@ -88,6 +88,7 @@ public class UnitControl : MonoBehaviour{
       rb = capsule.GetComponent<Rigidbody>();
       rb.isKinematic = true;
       isTraining = false;
+      points -= 1000;
     }
   }
 }

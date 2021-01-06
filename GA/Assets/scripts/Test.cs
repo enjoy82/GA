@@ -170,12 +170,12 @@ public class Test : MonoBehaviour
         for(int i = elite; i < object_num; i++){
             bool[] generate_gene = new bool[gene_length];
             int[] selected_parent = shuffle(elite,2);
-            Debug.Log(string.Join(",",selected_parent));
+            //Debug.Log(string.Join(",",selected_parent));
             bool[] parent1 = GA_list[selected_parent[0]];
             bool[] parent2 = GA_list[selected_parent[1]];
             int[] selected_gene = shuffle(gene_length,gene_length);
-            Debug.Log(string.Join(",",selected_gene));
-            Debug.Log(selected_gene[gene_length-1]);
+            //Debug.Log(string.Join(",",selected_gene));
+            //Debug.Log(selected_gene[gene_length-1]);
             for(int j = 0;j<(int)(gene_length/2);j++){
                 generate_gene[selected_gene[j]] = parent1[selected_gene[j]];
             }
