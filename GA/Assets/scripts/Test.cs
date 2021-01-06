@@ -179,12 +179,12 @@ public class Test : MonoBehaviour
             if(i % 2 == 0){
                 float pos = (float)8.0 * (i / 2);
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity) as GameObject;
-                //Debug.Log(boxiy[i].transform.GetChild(2).gameObject.GetComponent<UnitControl>());
-                unitControl[i] = boxiy[i].transform.GetChild(2).gameObject.GetComponent<UnitControl>();
+                //Debug.Log(boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>());
+                unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
                 //Debug.Log(GameObject.Find("Plane") as GameObject);
                 unitControl[i].plane = GameObject.Find("Plane");
-                //Debug.Log(boxiy[i].transform.GetChild(1).gameObject);
-                unitControl[i].cube = boxiy[i].transform.GetChild(1).gameObject;
+                //Debug.Log(boxiy[i].transform.GetChild(2).gameObject);
+                unitControl[i].cube = boxiy[i].transform.GetChild(2).gameObject;
 
                 //遺伝子の代入
                 //unitControl[i].gene = //
@@ -192,9 +192,9 @@ public class Test : MonoBehaviour
             }else{
                 float pos = (float)8.0 * ((i+1) / 2) * -1;
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
-                unitControl[i] = boxiy[i].transform.GetChild(2).gameObject.GetComponent<UnitControl>();
+                unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
                 unitControl[i].plane = GameObject.Find("Plane");
-                unitControl[i].cube = boxiy[i].transform.GetChild(1).gameObject;
+                unitControl[i].cube = boxiy[i].transform.GetChild(2).gameObject;
             }
         }
     }

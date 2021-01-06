@@ -22,7 +22,7 @@ public class UnitControl : MonoBehaviour{
   }
   void Update () {
     //板と足の角度の調整
-    Debug.Log(cube.transform.localEulerAngles.z);
+    //Debug.Log(cube.transform.localEulerAngles.z);
     legs[2].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
     legs[5].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
     if(isTraining){
