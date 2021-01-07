@@ -11,8 +11,8 @@ public class Test : MonoBehaviour
 {
     const int elite = 8;
     //オブジェクトの個数(1世代当たりのこの数)、進化させる世代数、遺伝で使う時間(per frame), 突然変異の確率
-    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000, mutation = 10;
-    const float frame_ms = 0.02f;
+    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 250, mutation = 10;
+    const float frame_ms = 0.04f;
     //結果格納部分(point,index)
     int[,] result = new int[object_num,2];
     //現在の世代数
@@ -51,7 +51,7 @@ public class Test : MonoBehaviour
 
     // Update is called once per frame(30fps, 1frame/0.033s)
     //updateが呼ばれなかったので、こうした →これでもダメ？
-    void Update(){
+    void execute(){
         //Debug.Log(frame+ ":フレーム数");
         if(frame == time){
             frame = 0;
@@ -60,6 +60,7 @@ public class Test : MonoBehaviour
             //ワンチャン遅延させなきゃダメかも
         }
         frame++;
+        Invoke("execute", frame_ms);
     }
 
     //初期設定
@@ -70,6 +71,7 @@ public class Test : MonoBehaviour
             result[i,1] = i;
         }
         createobjects();
+        execute();
     }
 
     //オブジェクト生成

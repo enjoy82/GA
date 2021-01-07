@@ -85,7 +85,7 @@ public class UnitControl : MonoBehaviour{
   }
   void OnCollisionEnter(Collision collision){
     if (isTraining && collision.gameObject == plane){
-      Debug.Log("Hit");
+      //Debug.Log("Hit");
       //判定終了
       Rigidbody rb = cube.GetComponent<Rigidbody>();
       rb.isKinematic = true;
