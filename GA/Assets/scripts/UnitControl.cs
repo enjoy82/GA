@@ -10,80 +10,27 @@ public class UnitControl : MonoBehaviour{
   public GameObject capsule;
   public GameObject humanoid;
   public RigBone[] legs = new RigBone[6];
-  //こいつをTestからコピーさせて、0-1で左右どちらかに重心をかけるようにしたい
-  public bool[] gene = new bool[180];
   public float points = 0;
-  public int movement_indicator = 0;
   public bool isTraining = true;
   const float frame_ms = 0.04f;
 
   void Start () {
-    execute();
   }
-  void execute () {
+//選択と強さ
+  public void movement(int select, int movement_indicator) {
     //動かす
     if(isTraining){
-      //板と足の角度の調整
-      //Debug.Log(cube.transform.localEulerAngles.z);
-      //legs[2].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
-      //legs[5].offset((float)(cube.transform.localEulerAngles.z),0,1,0);
-      //角度を出す
-      //Debug.Log(humanoid.transform.localEulerAngles.y);
-      int angle = (int)(humanoid.transform.localEulerAngles.y) + 89;
-      if(humanoid.transform.localEulerAngles.y > 180){
-        angle = (int)(humanoid.transform.localEulerAngles.y) -360 + 89;
+      if(select % 3 == 1){
+        movement_indicator *= 2;
       }
-      //Debug.Log(angle);
-      if(angle <0){
-        angle = 0;
-      }else if(angle >179){
-        angle = 179;
-      }
-      //位置が右だったら(geneで制御)
-      if(gene[angle]){
-        //インジケータの増加
-          movement_indicator = 2;
-      }else{
-         //インジケータの減少
-          movement_indicator = -2;
-      }
-      //左に動かす
-      /*
-      if(movement_indicator > 0){
-        legs[0].offset((float)movement_indicator,0,0,1);
-        legs[1].offset((float)(-2*movement_indicator),0,0,1);
-        legs[2].offset((float)(-movement_indicator),0,0,1);
-      }else if(movement_indicator == 0){
-        //戻す
-        legs[0].offset((float)movement_indicator,0,0,1);
-        legs[1].offset((float)(-2*movement_indicator),0,0,1);
-        legs[2].offset((float)(-movement_indicator),0,0,1);
-        legs[3].offset((float)movement_indicator,0,0,1);
-        legs[4].offset((float)(-2*movement_indicator),0,0,1);
-        legs[5].offset((float)(-movement_indicator),0,0,1);
-      }else{
-        //右に動かす
-        legs[3].offset((float)movement_indicator,0,0,1);
-        legs[4].offset((float)(-2*movement_indicator),0,0,1);
-        legs[5].offset((float)(-movement_indicator),0,0,1);
-      }
-      */
-      //評価(time bonus + angle point)
-      /*
-      int angle_point;
-      if(angle < 90){
-        angle_point = angle;
-      }else{
-        angle_point = 180 - angle;
-      }
-      points += 20 + angle_point;
-      */
-      points += 1;
-      Invoke("execute", frame_ms);
-    }
+      legs[select].offset((float)(movement_indicator),0,0,1);
 
-    
+      points += 1;
+      
+    }
   }
+
+
   void set_plane(GameObject input_plane){
     plane = input_plane;
   }
