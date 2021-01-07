@@ -11,8 +11,8 @@ public class Test : MonoBehaviour
 {
     const int elite = 8;
     //オブジェクトの個数(1世代当たりのこの数)、進化させる世代数、遺伝で使う時間(per frame), 突然変異の確率
-    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 1000, mutation = 10;
-    const float frame_ms = 0.02f;
+    const int object_num = elite + ((elite * (elite+1)) / 2), generations = 1000, time = 250, mutation = 10;
+    const float frame_ms = 0.04f;
     //結果格納部分(point,index)
     int[,] result = new int[object_num,2];
     //現在の世代数
@@ -51,15 +51,15 @@ public class Test : MonoBehaviour
 
     // Update is called once per frame(30fps, 1frame/0.033s)
     //updateが呼ばれなかったので、こうした →これでもダメ？
-    void Update(){
+    void execute(){
         //Debug.Log(frame+ ":フレーム数");
         if(frame == time){
             frame = 0;
             evaluate();
             return;
-            //ワンチャン遅延させなきゃダメかも
         }
         frame++;
+        Invoke("execute", frame_ms);
     }
 
     //初期設定
@@ -70,6 +70,7 @@ public class Test : MonoBehaviour
             result[i,1] = i;
         }
         createobjects();
+        execute();
     }
 
     //オブジェクト生成
@@ -78,7 +79,7 @@ public class Test : MonoBehaviour
         unitControl = new UnitControl[object_num];
         for(int i = 0; i < object_num; i++){
             if(i % 2 == 0){
-                float pos = (float)8.0 * (i / 2);
+                float pos = (float)20.0 * (i / 2);
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity) as GameObject;
                 //Debug.Log(boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>());
                 unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
@@ -90,7 +91,7 @@ public class Test : MonoBehaviour
                 unitControl[i].gene = GA_list[i];
 
             }else{
-                float pos = (float)8.0 * ((i+1) / 2) * -1;
+                float pos = (float)20.0 * ((i+1) / 2) * -1;
                 boxiy[i] = Instantiate (Objct, new Vector3(pos,2.5f,0.0f), Quaternion.identity);
                 unitControl[i] = boxiy[i].transform.GetChild(0).gameObject.GetComponent<UnitControl>();
                 unitControl[i].plane = GameObject.Find("Plane");
