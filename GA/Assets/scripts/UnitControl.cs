@@ -50,24 +50,24 @@ public class UnitControl : MonoBehaviour{
           movement_indicator--;
         }
       }
-      //左に動かす
+      //左足をうごかす（右に傾く）に動かす
       if(movement_indicator > 0){
-        legs[0].offset((float)movement_indicator,0,0,1);
+        legs[0].offset((float)(-movement_indicator),0,0,1);
         legs[1].offset((float)(-2*movement_indicator),0,0,1);
-        legs[2].offset((float)(-movement_indicator),0,0,1);
+        legs[2].offset((float)(movement_indicator),0,0,1);
       }else if(movement_indicator == 0){
         //戻す
-        legs[0].offset((float)movement_indicator,0,0,1);
+        legs[0].offset((float)(-movement_indicator),0,0,1);
         legs[1].offset((float)(-2*movement_indicator),0,0,1);
-        legs[2].offset((float)(-movement_indicator),0,0,1);
-        legs[3].offset((float)movement_indicator,0,0,1);
+        legs[2].offset((float)(movement_indicator),0,0,1);
+        legs[3].offset((float)(-movement_indicator),0,0,1);
         legs[4].offset((float)(-2*movement_indicator),0,0,1);
-        legs[5].offset((float)(-movement_indicator),0,0,1);
+        legs[5].offset((float)(movement_indicator),0,0,1);
       }else{
         //右に動かす
-        legs[3].offset((float)movement_indicator,0,0,1);
+        legs[3].offset((float)(-movement_indicator),0,0,1);
         legs[4].offset((float)(-2*movement_indicator),0,0,1);
-        legs[5].offset((float)(-movement_indicator),0,0,1);
+        legs[5].offset((float)(movement_indicator),0,0,1);
       }
       //評価(time bonus + angle point)
       int angle_point;
