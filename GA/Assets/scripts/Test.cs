@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.IO;
+using System.Text;
+
 
 public class Test : MonoBehaviour
 {
@@ -113,6 +116,7 @@ public class Test : MonoBehaviour
         make_next_unit();
         Debug.Log(count+ " 世代目");
         Debug.Log(result[0,0]+":最大エリート");
+        textSave(result[0,0]);
         //TODO　結果出力したい
         count++;
         if(count == generations+1){
@@ -127,7 +131,7 @@ public class Test : MonoBehaviour
             float point = unitControl[i].points;
             if(unitControl[i].isTraining){
                 //生存ボーナス
-                point += 10000;
+                point += 1000000000;
             }
             result[i,0] = (int)point;
         }
@@ -149,6 +153,10 @@ public class Test : MonoBehaviour
                     result[i,1] = y;
                 }
             }
+        }
+        //結果を出力
+        for(int i = 0; i< object_num;i++){
+            //Debug.Log(string.Join(",",result[i,0]));
         }
 
     }
@@ -211,4 +219,11 @@ public class Test : MonoBehaviour
 		style.normal.textColor = Color.black;
 		GUI.Label(new Rect(10, 10, 100, 40), str, style);
 	}
+
+    public void textSave(int txt){
+        StreamWriter sw = new StreamWriter("./Assets/Log/log.csv",true);
+        sw.WriteLine(txt);
+        sw.Flush();
+        sw.Close();
+    }
 }

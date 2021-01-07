@@ -70,7 +70,13 @@ public class UnitControl : MonoBehaviour{
         legs[5].offset((float)(-movement_indicator),0,0,1);
       }
       //評価(time bonus + angle point)
-      points += 20 + (90 - Mathf.Abs(humanoid.transform.localEulerAngles.y));
+      int angle_point;
+      if(angle < 90){
+        angle_point = angle;
+      }else{
+        angle_point = 180 - angle;
+      }
+      points += 20 + angle_point;
     }
 
   }
@@ -88,7 +94,6 @@ public class UnitControl : MonoBehaviour{
       rb = capsule.GetComponent<Rigidbody>();
       rb.isKinematic = true;
       isTraining = false;
-      points -= 1000;
     }
   }
 }

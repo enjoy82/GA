@@ -27,7 +27,6 @@ public class CubeCollision : MonoBehaviour
             rb = unit.capsule.GetComponent<Rigidbody>();
             rb.isKinematic = true;
             unit.isTraining = false;
-            unit.points -= 1000;
         }
     }
 }
