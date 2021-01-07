@@ -60,12 +60,12 @@ public class UnitControl : MonoBehaviour{
         legs[0].offset((float)(-movement_indicator),0,0,1);
         legs[1].offset((float)(-2*movement_indicator),0,0,1);
         legs[2].offset((float)(movement_indicator),0,0,1);
-        legs[3].offset((float)(-movement_indicator),0,0,1);
+        legs[3].offset((float)(movement_indicator),0,0,1);
         legs[4].offset((float)(-2*movement_indicator),0,0,1);
         legs[5].offset((float)(movement_indicator),0,0,1);
       }else{
         //右に動かす
-        legs[3].offset((float)(-movement_indicator),0,0,1);
+        legs[3].offset((float)(movement_indicator),0,0,1);
         legs[4].offset((float)(-2*movement_indicator),0,0,1);
         legs[5].offset((float)(movement_indicator),0,0,1);
       }
